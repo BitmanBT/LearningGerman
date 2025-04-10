@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Добавить слова | DeutschLernen</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="d-flex flex-column min-vh-100">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'home' %}">DeutschLernen</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'home' %}">Главная</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'vocabulary' %}">Словарь</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'exercises' %}">Упражнения</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{% url 'add_words' %}">Добавить слова</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-grow-1 container py-5">
+        <div class="row">
+            <div class="col-lg-6 mx-auto">
+                <h1 class="mb-4">Добавить новые слова</h1>
+                
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        Форма добавления слов
+                    </div>
+                    <div class="card-body">
+                        <form>
+                            <div class="mb-3">
+                                <label for="germanWord" class="form-label">Слово на немецком</label>
+                                <input type="text" class="form-control" id="germanWord" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="russianWord" class="form-label">Перевод на русский</label>
+                                <input type="text" class="form-control" id="russianWord" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="wordLevel" class="form-label">Уровень сложности</label>
+                                <select class="form-select" id="wordLevel">
+                                    <option value="A1">A1 (Начальный)</option>
+                                    <option value="A2">A2 (Базовый)</option>
+                                    <option value="B1">B1 (Средний)</option>
+                                    <option value="B2">B2 (Выше среднего)</option>
+                                    <option value="C1">C1 (Продвинутый)</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="wordCategory" class="form-label">Категория</label>
+                                <input type="text" class="form-control" id="wordCategory" placeholder="Например: еда, транспорт, работа">
+                            </div>
+                            <button type="submit" class="btn btn-primary">Добавить слово</button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="alert alert-success mt-4" role="alert">
+                    <h4 class="alert-heading">Советы по добавлению слов</h4>
+                    <ul>
+                        <li>Указывайте артикли для существительных (der, die, das)</li>
+                        <li>Для глаголов указывайте основную форму (инфинитив)</li>
+                        <li>Добавляйте слова по темам для лучшего запоминания</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-dark text-white text-center p-4">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <h5>DeutschLernen</h5>
+                    <p>Образовательная платформа для изучения немецкого языка</p>
+                    <p class="mb-0">&copy; 2025 DeutschLernen. Все права защищены.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
