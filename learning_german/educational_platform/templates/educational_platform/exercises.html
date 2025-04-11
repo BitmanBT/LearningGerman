@@ -1,12 +1,13 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru" class="h-100">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Упражнения | DeutschLernen</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
 </head>
-<body class="d-flex flex-column min-vh-100">
+<body class="d-flex flex-column min-vh-100 bg-dark text-light">
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
             <a class="navbar-brand" href="{% url 'home' %}">DeutschLernen</a>
@@ -32,58 +33,77 @@
         </div>
     </nav>
 
-    <main class="flex-grow-1 container py-5">
-        <div class="row">
-            <div class="col-lg-8 mx-auto">
-                <h1 class="mb-4">Упражнения</h1>
-                
-                <div class="row row-cols-1 row-cols-md-2 g-4">
-                    <div class="col">
-                        <div class="card h-100">
-                            <div class="card-body">
-                                <h5 class="card-title">Перевод слов</h5>
-                                <p class="card-text">Практика перевода слов с русского на немецкий и обратно.</p>
-                                <a href="#" class="btn btn-primary">Начать</a>
-                            </div>
-                            <div class="card-footer">
-                                <small class="text-muted">Уровень: A1-A2</small>
-                            </div>
+    <main class="flex-grow-1 py-5">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="card border-secondary">
+                        <div class="card-header bg-primary text-white">
+                            <h2 class="h5 mb-0">Выберите правильный перевод</h2>
                         </div>
-                    </div>
-                    <div class="col">
-                        <div class="card h-100">
-                            <div class="card-body">
-                                <h5 class="card-title">Заполнить пропуски</h5>
-                                <p class="card-text">Вставьте правильные слова в предложения.</p>
-                                <a href="#" class="btn btn-primary">Начать</a>
-                            </div>
-                            <div class="card-footer">
-                                <small class="text-muted">Уровень: A2-B1</small>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="card h-100">
-                            <div class="card-body">
-                                <h5 class="card-title">Аудирование</h5>
-                                <p class="card-text">Прослушайте и напишите услышанное предложение.</p>
-                                <a href="#" class="btn btn-primary">Начать</a>
-                            </div>
-                            <div class="card-footer">
-                                <small class="text-muted">Уровень: B1-B2</small>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="card h-100">
-                            <div class="card-body">
-                                <h5 class="card-title">Грамматика</h5>
-                                <p class="card-text">Упражнения на артикли, склонения и времена.</p>
-                                <a href="#" class="btn btn-primary">Начать</a>
-                            </div>
-                            <div class="card-footer">
-                                <small class="text-muted">Уровень: A2-C1</small>
-                            </div>
+                        <div class="card-body">
+                            {% if no_words %}
+                                <div class="alert alert-warning">
+                                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                                    В словаре нет слов для упражнений. Пожалуйста, добавьте слова.
+                                </div>
+                                <a href="{% url 'add_words' %}" class="btn btn-primary">
+                                    <i class="bi bi-plus-circle me-2"></i>Добавить слова
+                                </a>
+                            {% else %}
+                                <div class="text-center mb-4">
+                                    <h3 class="mb-4">
+                                        {% if direction == 'de-ru' %}
+                                            Переведите с немецкого:
+                                        {% else %}
+                                            Переведите с русского:
+                                        {% endif %}
+                                    </h3>
+                                    <div class="display-4 mb-4 p-3 bg-secondary bg-opacity-10 rounded">
+                                        {{ word_to_translate }}
+                                    </div>
+                                </div>
+
+                                {% if show_result %}
+                                    <div class="alert {% if feedback.is_correct %}alert-success{% else %}alert-danger{% endif %} mb-4">
+                                        {% if feedback.is_correct %}
+                                            <i class="bi bi-check-circle-fill me-2"></i>
+                                            <strong>Правильно!</strong> Отличная работа!
+                                        {% else %}
+                                            <i class="bi bi-exclamation-circle-fill me-2"></i>
+                                            <strong>Неправильно.</strong> Правильный ответ: <strong>{{ feedback.correct_answer }}</strong>
+                                        {% endif %}
+                                    </div>
+                                    
+                                    <div class="d-grid">
+                                        <a href="{% url 'exercises' %}" class="btn btn-primary btn-lg">
+                                            <i class="bi bi-arrow-right-circle me-2"></i>Следующее слово
+                                        </a>
+                                    </div>
+                                {% else %}
+                                    <form method="post">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="correct_word_id" value="{{ correct_word_id }}">
+                                        <input type="hidden" name="direction" value="{{ direction }}">
+                                        <input type="hidden" name="word_to_translate" value="{{ word_to_translate }}">
+                                        {% for option in options %}
+                                            <input type="hidden" name="option_ids" value="{{ option.id }}">
+                                            <input type="hidden" name="option_texts" value="{{ option.text }}">
+                                        {% endfor %}
+                                        
+                                        <div class="list-group gap-2">
+                                            {% for option in options %}
+                                                <button type="submit" 
+                                                        name="selected_option_id" 
+                                                        value="{{ option.id }}"
+                                                        class="list-group-item list-group-item-action py-3 text-start {% if show_result and option.is_correct %}list-group-item-success{% elif show_result and option.id == feedback.selected_id %}list-group-item-danger{% endif %}">
+                                                    {{ option.text }}
+                                                </button>
+                                            {% endfor %}
+                                        </div>
+                                    </form>
+                                {% endif %}
+                            {% endif %}
                         </div>
                     </div>
                 </div>
@@ -91,15 +111,11 @@
         </div>
     </main>
 
-    <footer class="bg-dark text-white text-center p-4">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-md-8">
-                    <h5>DeutschLernen</h5>
-                    <p>Образовательная платформа для изучения немецкого языка</p>
-                    <p class="mb-0">&copy; 2025 DeutschLernen. Все права защищены.</p>
-                </div>
-            </div>
+    <footer class="bg-dark text-white py-4">
+        <div class="container text-center">
+            <h5>DeutschLernen</h5>
+            <p>Образовательная платформа для изучения немецкого языка</p>
+            <p class="mb-0">&copy; 2025 DeutschLernen. Все права защищены.</p>
         </div>
     </footer>
 
