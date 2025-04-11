@@ -79,7 +79,7 @@
                                     <td class="border-secondary">
                                         <span class="badge 
                                             {% if word.difficulty == 'A1' or word.difficulty == 'A2' %}bg-success
-                                            {% elif word.difficulty == 'B1' %}bg-warning
+                                            {% elif word.difficulty == 'B1' or word.difficulty == 'B2' %}bg-warning
                                             {% else %}bg-danger{% endif %}">
                                             {{ word.get_difficulty_display }}
                                         </span>
