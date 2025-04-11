@@ -1,5 +1,7 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.contrib import messages
 from .models import Word
+from .forms import AddWordForm
 
 
 def index(request):
@@ -23,4 +25,12 @@ def exercises(request):
     return render(request, 'educational_platform/exercises.html')
 
 def add_words(request):
-    return render(request, 'educational_platform/add_words.html')
+    if request.method == 'POST':
+        form = AddWordForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Слово успешно добавлено в словарь!')
+            return redirect('add_words')
+    else:
+        form = AddWordForm()
+    return render(request, 'educational_platform/add_words.html', {'form': form})
