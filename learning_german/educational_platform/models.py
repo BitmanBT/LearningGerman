@@ -1,5 +1,6 @@
 from django.db import models
 
+
 class Word(models.Model):
     DIFFICULTY_CHOICES = [
         ('A1', 'Начальный (A1)'),
