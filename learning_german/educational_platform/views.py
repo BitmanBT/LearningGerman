@@ -1,6 +1,6 @@
+from random import sample, shuffle
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from random import sample, shuffle
 from .models import Word
 from .forms import AddWordForm
 
@@ -10,11 +10,9 @@ def index(request):
 
 def vocabulary(request):
     words = Word.objects.all().order_by('german_word')
-    
     difficulty_filter = request.GET.get('difficulty')
     if difficulty_filter:
         words = words.filter(difficulty=difficulty_filter)
-    
     context = {
         'words': words,
         'difficulty_choices': Word.DIFFICULTY_CHOICES,
@@ -24,17 +22,13 @@ def vocabulary(request):
 
 def exercises(request):
     all_words = list(Word.objects.all())
-    
     if not all_words:
         return render(request, 'educational_platform/exercises.html', {'no_words': True})
-    
     context = {}
-    
     if request.method == 'POST' and 'selected_option_id' in request.POST:
         selected_id = int(request.POST['selected_option_id'])
         correct_id = int(request.POST['correct_word_id'])
         correct_word = Word.objects.get(id=correct_id)
-        
         context.update({
             'direction': request.POST['direction'],
             'word_to_translate': request.POST['word_to_translate'],
@@ -62,9 +56,7 @@ def exercises(request):
         wrong_options = sample(other_words, min(3, len(other_words)))
         options = [correct_word] + wrong_options
         shuffle(options)
-        
         direction = 'de-ru' if sample([True, False], 1)[0] else 'ru-de'
-        
         context.update({
             'direction': direction,
             'word_to_translate': correct_word.german_word if direction == 'de-ru' else correct_word.russian_translation,
