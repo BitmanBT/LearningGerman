@@ -2,8 +2,10 @@
 from random import sample, shuffle
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from .models import Word
-from .forms import AddWordForm
+from django.views.generic import FormView
+from django.urls import reverse_lazy
+from .models import Word, Feedback
+from .forms import AddWordForm, FeedbackForm
 
 
 def index(request):
@@ -92,3 +94,21 @@ def add_words(request):
     else:
         form = AddWordForm()
     return render(request, 'educational_platform/add_words.html', {'form': form})
+
+class FeedbackView(FormView):
+    template_name = 'educational_platform/feedback.html'
+    form_class = FeedbackForm
+    success_url = reverse_lazy('feedback')
+    
+    def form_valid(self, form):
+        feedback = form.save()
+        messages.success(
+            self.request,
+            'Спасибо за ваше сообщение! Мы рассмотрим его в ближайшее время.'
+        )
+        return super().form_valid(form)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Обратная связь'
+        return context

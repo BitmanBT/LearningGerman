@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="ru" class="h-100">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Обратная связь | DeutschLernen</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="d-flex flex-column min-vh-100 bg-dark">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'home' %}">DeutschLernen</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'home' %}">Главная</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'vocabulary' %}">Словарь</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'exercises' %}">Упражнения</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'add_words' %}">Добавить слова</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{% url 'feedback' %}">Обратная связь</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-grow-1 bg-dark text-light">
+        <div class="container py-5">
+            <div class="row justify-content-center">
+                <div class="col-lg-6">
+                    <div class="card border-secondary">
+                        <div class="card-header bg-primary text-white rounded-top">
+                            <h2 class="h5 mb-0">Обратная связь</h2>
+                        </div>
+                        <div class="card-body">
+                            {% if messages %}
+                            <div class="mb-4">
+                                {% for message in messages %}
+                                <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
+                                    {{ message }}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                            
+                            <form method="post" novalidate>
+                                {% csrf_token %}
+                                
+                                <div class="mb-3">
+                                    <label for="{{ form.feedback_type.id_for_label }}" class="form-label">
+                                        Тип обращения
+                                    </label>
+                                    <select class="form-select" id="{{ form.feedback_type.id_for_label }}" name="{{ form.feedback_type.name }}" required>
+                                        <option value="">-- Выберите тип --</option>
+                                        <option value="bug">Сообщение об ошибке</option>
+                                        <option value="suggestion">Предложение по улучшению</option>
+                                        <option value="question">Вопрос</option>
+                                        <option value="other">Другое</option>
+                                    </select>
+                                    {% if form.feedback_type.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.feedback_type.errors|first }}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="{{ form.email.id_for_label }}" class="form-label">
+                                        Ваш email (необязательно)
+                                    </label>
+                                    <input type="email" class="form-control" id="{{ form.email.id_for_label }}" 
+                                           name="{{ form.email.name }}" value="{{ form.email.value|default_if_none:'' }}">
+                                    <div class="form-text text-muted">Мы ответим вам на этот email, если потребуется</div>
+                                    {% if form.email.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.email.errors|first }}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="{{ form.message.id_for_label }}" class="form-label">
+                                        Сообщение
+                                    </label>
+                                    <textarea class="form-control" id="{{ form.message.id_for_label }}" 
+                                              name="{{ form.message.name }}" rows="5" required
+                                              placeholder="Опишите вашу проблему или предложение...">{{ form.message.value|default_if_none:'' }}</textarea>
+                                    {% if form.message.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.message.errors|first }}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                
+                                <div class="mb-4 form-check">
+                                    <input type="checkbox" class="form-check-input" id="{{ form.consent.id_for_label }}" 
+                                           name="{{ form.consent.name }}" required>
+                                    <label class="form-check-label" for="{{ form.consent.id_for_label }}">
+                                        Я согласен на обработку персональных данных
+                                    </label>
+                                    {% if form.consent.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.consent.errors|first }}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                
+                                <div class="d-grid gap-2">
+                                    <button type="submit" class="btn btn-primary btn-lg">
+                                        Отправить сообщение
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-dark text-white py-4">
+        <div class="container text-center">
+            <h5>DeutschLernen</h5>
+            <p>Образовательная платформа для изучения немецкого языка</p>
+            <p class="mb-0">&copy; 2025 DeutschLernen. Все права защищены.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Добавляем класс is-invalid для ошибочных полей
+            const inputs = document.querySelectorAll('input, select, textarea');
+            inputs.forEach(input => {
+                if (input.classList.contains('is-invalid')) {
+                    input.classList.add('is-invalid');
+                }
+            });
+            
+            // Валидация формы перед отправкой
+            const form = document.querySelector('form');
+            form.addEventListener('submit', function(event) {
+                let isValid = true;
+                
+                // Проверка обязательных полей
+                const message = document.getElementById('{{ form.message.id_for_label }}');
+                if (message.value.trim().length < 10) {
+                    isValid = false;
+                    message.classList.add('is-invalid');
+                    const errorDiv = message.nextElementSibling;
+                    if (!errorDiv || !errorDiv.classList.contains('invalid-feedback')) {
+                        const newErrorDiv = document.createElement('div');
+                        newErrorDiv.className = 'invalid-feedback d-block';
+                        newErrorDiv.textContent = 'Сообщение должно содержать минимум 10 символов';
+                        message.parentNode.insertBefore(newErrorDiv, message.nextSibling);
+                    }
+                }
+                
+                const consent = document.getElementById('{{ form.consent.id_for_label }}');
+                if (!consent.checked) {
+                    isValid = false;
+                    consent.classList.add('is-invalid');
+                }
+                
+                if (!isValid) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+            });
+            
+            // Убираем ошибки при вводе
+            inputs.forEach(input => {
+                input.addEventListener('input', function() {
+                    if (this.classList.contains('is-invalid')) {
+                        this.classList.remove('is-invalid');
+                        const errorDiv = this.nextElementSibling;
+                        if (errorDiv && errorDiv.classList.contains('invalid-feedback')) {
+                            errorDiv.remove();
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,6 +1,6 @@
 """This module is responsible for the forms that the application uses"""
 from django import forms
-from .models import Word
+from .models import Word, Feedback
 
 class AddWordForm(forms.ModelForm):
     """A class for a form for adding new words to the database"""
@@ -39,3 +39,28 @@ class AddWordForm(forms.ModelForm):
         if not all(char.isalpha() or char.isspace() or char in '-' for char in russian_translation):
             raise forms.ValidationError("Русский перевод содержит недопустимые символы")
         return russian_translation
+
+class FeedbackForm(forms.ModelForm):
+    consent = forms.BooleanField(
+        label='Я согласен на обработку персональных данных',
+        required=True,
+        widget=forms.CheckboxInput(attrs={'class': 'form-check-input'})
+    )
+    
+    class Meta:
+        model = Feedback
+        fields = ['feedback_type', 'email', 'message', 'consent']
+        widgets = {
+            'feedback_type': forms.Select(attrs={'class': 'form-select'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control'}),
+            'message': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 5,
+                'placeholder': 'Опишите вашу проблему или предложение...'
+            }),
+        }
+        labels = {
+            'feedback_type': 'Тип обращения',
+            'email': 'Ваш email (необязательно)',
+            'message': 'Сообщение',
+        }

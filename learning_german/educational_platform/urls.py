@@ -8,4 +8,5 @@ urlpatterns = [
     path('vocabulary', views.vocabulary, name='vocabulary'),
     path('exercises', views.exercises, name='exercises'),
     path('add_words', views.add_words, name='add_words'),
+    path('feedback/', views.FeedbackView.as_view(), name='feedback'),
 ]
