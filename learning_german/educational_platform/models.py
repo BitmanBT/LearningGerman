@@ -1,7 +1,17 @@
+"""This module is responsible for the data models stored in the database."""
 from django.db import models
 
 
 class Word(models.Model):
+    """
+    The model of words stored in the database
+
+    Attributes:
+        DIFFICULTY_CHOICES (list[tuple[str, str]]): word complexity options in German
+        german_word (CharField[str]): a word in German
+        russian_translation (CharField[str]): translation of a German word into Russian
+        difficulty (CharField[str]): Common difficulty of a word in German
+    """
     DIFFICULTY_CHOICES = [
         ('A1', 'Начальный (A1)'),
         ('A2', 'Базовый (A2)'),
@@ -17,5 +27,6 @@ class Word(models.Model):
         verbose_name = "Слово"
         verbose_name_plural = "Слова"
         ordering = ['german_word']
+
     def __str__(self):
         return f"{self.german_word} - {self.russian_translation}"

@@ -1,5 +1,7 @@
+"""This module is responsible for addressing within the application"""
 from django.urls import path
 from . import views
+
 
 urlpatterns = [
     path('', views.index, name='home'),

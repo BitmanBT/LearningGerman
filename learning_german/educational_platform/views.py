@@ -1,3 +1,4 @@
+"""This module is responsible for displaying the content"""
 from random import sample, shuffle
 from django.shortcuts import render, redirect
 from django.contrib import messages
@@ -6,9 +7,11 @@ from .forms import AddWordForm
 
 
 def index(request):
+    """Index page"""
     return render(request, 'educational_platform/index.html')
 
 def vocabulary(request):
+    """Vocabulary page"""
     words = Word.objects.all().order_by('german_word')
     difficulty_filter = request.GET.get('difficulty')
     if difficulty_filter:
@@ -21,6 +24,7 @@ def vocabulary(request):
     return render(request, 'educational_platform/vocabulary.html', context)
 
 def exercises(request):
+    """Exercises page"""
     all_words = list(Word.objects.all())
     if not all_words:
         return render(request, 'educational_platform/exercises.html', {'no_words': True})
@@ -45,7 +49,9 @@ def exercises(request):
             ],
             'feedback': {
                 'is_correct': selected_id == correct_id,
-                'correct_answer': correct_word.russian_translation if request.POST['direction'] == 'de-ru' else correct_word.german_word,
+                'correct_answer': correct_word.russian_translation 
+                                  if request.POST['direction'] == 'de-ru' 
+                                  else correct_word.german_word,
                 'selected_id': selected_id
             },
             'show_result': True
@@ -59,7 +65,9 @@ def exercises(request):
         direction = 'de-ru' if sample([True, False], 1)[0] else 'ru-de'
         context.update({
             'direction': direction,
-            'word_to_translate': correct_word.german_word if direction == 'de-ru' else correct_word.russian_translation,
+            'word_to_translate': correct_word.german_word
+                                 if direction == 'de-ru'
+                                 else correct_word.russian_translation,
             'options': [
                 {
                     'id': word.id,
@@ -74,6 +82,7 @@ def exercises(request):
     return render(request, 'educational_platform/exercises.html', context)
 
 def add_words(request):
+    """Page for adding new words"""
     if request.method == 'POST':
         form = AddWordForm(request.POST)
         if form.is_valid():
