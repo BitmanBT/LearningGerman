@@ -13,11 +13,20 @@
 3. Ввести команды по порядку:
 ```
 pip install -r requirements.txt
+cd learning_german
+python manage.py migrate
+```
+4. Создайте суперпользователя, если это нужно:
+```
+python manage.py createsuperuser
+```
+5. Запустите сервер:
+```
 python manage.py runserver
 ```
 
 ## Как проверять качество кода
 ```
-pylint .\educational_platform --load-plugins=pylint_django --django-settings-module=learning_german.settings
-pylint .\learning_german\ --load-plugins=pylint_django --django-settings-module=learning_german.settings
+pylint educational_platform --load-plugins=pylint_django --django-settings-module=learning_german.settings
+pylint learning_german --load-plugins=pylint_django --django-settings-module=learning_german.settings
 ```
