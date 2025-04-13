@@ -33,13 +33,24 @@ class Word(models.Model):
         return f"{self.german_word} - {self.russian_translation}"
 
 class Feedback(models.Model):
+    """
+    The model of feedbacks stored in the database
+
+    Attributes:
+        FEEDBACK_TYPES (list[tuple[str, str]]): types of the feedback exist
+        feedback_type (CharField[str]): chosen type of the feedback
+        email (EmailField[str|None]): email to address the answer
+        message (TextField[str]): the message
+        consent (BooleanField[bool]): to deal with personal data
+        created_at (DateTimeField[datetime]): when the feedback was given
+        is_processed (BooleanField[bool]): if the message was processed by admin
+    """
     FEEDBACK_TYPES = [
         ('bug', 'Сообщение об ошибке'),
         ('suggestion', 'Предложение по улучшению'),
         ('question', 'Вопрос'),
         ('other', 'Другое'),
     ]
-    
     feedback_type = models.CharField(
         'Тип обращения',
         max_length=20,

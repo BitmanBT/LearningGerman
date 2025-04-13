@@ -41,12 +41,12 @@ class AddWordForm(forms.ModelForm):
         return russian_translation
 
 class FeedbackForm(forms.ModelForm):
+    """A class for a form for adding feedback"""
     consent = forms.BooleanField(
         label='Я согласен на обработку персональных данных',
         required=True,
         widget=forms.CheckboxInput(attrs={'class': 'form-check-input'})
     )
-    
     class Meta:
         model = Feedback
         fields = ['feedback_type', 'email', 'message', 'consent']
